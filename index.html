@@ -44,8 +44,11 @@
   .hint{font-size:12px;color:var(--tx3);margin-top:5px}
 
   /* otp */
-  .otp-row{display:flex;gap:8px;margin-bottom:16px}
-  .otp-box{flex:1;height:40px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:16px;font-weight:700;text-align:center;background:var(--bg);color:var(--tx);outline:none;transition:border-color .2s}
+  .otp-row{display:flex;gap:clamp(4px,2vw,10px);margin-bottom:16px}
+  .otp-box{flex:1;height:clamp(24px,8vw,38px);border:1.5px solid var(--bd);border-radius:var(--rs);font-size:clamp(14px,4vw,18px);font-weight:700;text-align:center;background:var(--bg);color:var(--tx);outline:none;transition:border-color .2s}
+  
+  ./*otp-row{display:flex;gap:8px;margin-bottom:16px}*/
+  /*.otp-box{flex:1;height:40px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:16px;font-weight:700;text-align:center;background:var(--bg);color:var(--tx);outline:none;transition:border-color .2s}*/
   .otp-box:focus{border-color:var(--teal)}
 
   /* buttons */
