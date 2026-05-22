@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#1D9E75">
+<title>Como estás?</title>
+<style>
+  :root {
+    --teal:#1D9E75;--teal-l:#E1F5EE;--teal-d:#0F6E56;
+    --amber:#BA7517;--amber-l:#FAEEDA;
+    --blue:#378ADD;--blue-l:#E6F1FB;
+    --coral:#D85A30;--coral-l:#FAECE7;
+    --purple:#7F77DD;--purple-l:#EEEDFE;
+    --red:#E24B4A;--red-l:#FCEBEB;
+    --gray:#888780;--gray-l:#F1EFE8;
+    --tx:#1a1a1a;--tx2:#666;--tx3:#999;
+    --bg:#fff;--bg2:#f7f7f5;--bd:rgba(0,0,0,.09);
+    --r:14px;--rs:8px;
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --tx:#f0efe8;--tx2:#aaa;--tx3:#555;
+    --bg:#1a1a1a;--bg2:#242424;--bd:rgba(255,255,255,.09);
+    --teal-l:#04342C;--amber-l:#412402;--blue-l:#042C53;
+    --coral-l:#4A1B0C;--purple-l:#26215C;--red-l:#501313;--gray-l:#2C2C2A;
+  }}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,'Helvetica Neue',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;max-width:430px;margin:0 auto}
+  .screen{display:none;padding:28px 20px;min-height:100vh;flex-direction:column}
+  .screen.on{display:flex}
+
+  /* typography */
+  h1{font-size:26px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+  .sub{font-size:14px;color:var(--tx2);line-height:1.55;margin-bottom:28px}
+
+  /* fields */
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}
+  .field input,.field textarea{width:100%;padding:13px 14px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:16px;font-family:inherit;background:var(--bg);color:var(--tx);outline:none;transition:border-color .2s}
+  .field input:focus,.field textarea:focus{border-color:var(--teal)}
+  .field textarea{resize:none;height:82px;line-height:1.5}
+  .hint{font-size:12px;color:var(--tx3);margin-top:5px}
+
+  /* otp */
+  .otp-row{display:flex;gap:8px;margin-bottom:16px}
+  .otp-box{flex:1;height:52px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:22px;font-weight:700;text-align:center;background:var(--bg);color:var(--tx);outline:none;transition:border-color .2s}
+  .otp-box:focus{border-color:var(--teal)}
+
+  /* buttons */
+  .btn{width:100%;padding:15px;border:none;border-radius:var(--r);font-size:16px;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity .15s,transform .1s}
+  .btn:active{transform:scale(.98);opacity:.85}
+  .btn-p{background:var(--teal);color:#fff}
+  .btn-g{background:var(--bg2);color:var(--tx2);border:1.5px solid var(--bd)}
+  .btn-sm{width:auto;padding:7px 14px;font-size:13px;border-radius:var(--rs)}
+  .gap{height:12px}
+
+  /* emotion grid */
+  .emo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}
+  .emo-card{border:1.5px solid var(--bd);border-radius:var(--r);padding:14px 10px;cursor:pointer;transition:all .2s;text-align:center;background:var(--bg)}
+  .emo-card.sel{border-width:2.5px}
+  .emo-card .ic{font-size:30px;margin-bottom:5px}
+  .emo-card .lb{font-size:13px;font-weight:600}
+  .emo-card .sb{font-size:11px;color:var(--tx2);margin-top:2px}
+  .ec-alegria.sel{border-color:var(--amber);background:var(--amber-l)}
+  .ec-tristeza.sel{border-color:var(--blue);background:var(--blue-l)}
+  .ec-medo.sel{border-color:var(--purple);background:var(--purple-l)}
+  .ec-raiva.sel{border-color:var(--coral);background:var(--coral-l)}
+  .ec-calma.sel{border-color:var(--teal);background:var(--teal-l)}
+  .ec-misto.sel{border-color:var(--gray);background:var(--gray-l)}
+
+  /* slider */
+  .sl-wrap{margin-bottom:22px}
+  .sl-labs{display:flex;justify-content:space-between;font-size:11px;color:var(--tx3);margin-top:6px}
+  input[type=range]{width:100%;height:4px;border-radius:4px;background:var(--bd);appearance:none;outline:none;cursor:pointer}
+  input[type=range]::-webkit-slider-thumb{appearance:none;width:22px;height:22px;border-radius:50%;background:var(--teal);border:3px solid var(--bg);box-shadow:0 0 0 1.5px var(--teal)}
+
+  /* section label */
+  .sec{font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}
+
+  /* profile bar */
+  .prof{display:flex;align-items:center;gap:11px;padding:13px;background:var(--bg2);border-radius:var(--r);border:1px solid var(--bd);margin-bottom:22px}
+  .av{width:38px;height:38px;border-radius:50%;background:var(--teal-l);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--teal-d);flex-shrink:0}
+  .pi{flex:1;min-width:0}
+  .pn{font-size:14px;font-weight:600}
+  .pe{font-size:12px;color:var(--tx2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* status screens */
+  .big-ic{font-size:62px;text-align:center;margin-bottom:14px}
+  .big-t{font-size:22px;font-weight:700;text-align:center;margin-bottom:8px}
+  .big-s{font-size:14px;color:var(--tx2);text-align:center;line-height:1.6}
+  .sp{flex:1}
+
+  /* pending banner */
+  .pend-ban{background:var(--amber-l);border:1px solid var(--amber);border-radius:var(--r);padding:14px 16px;margin-bottom:20px}
+  .pend-ban .pt{font-size:13px;font-weight:700;color:var(--amber);margin-bottom:3px}
+  .pend-ban .ps{font-size:12px;color:var(--amber);opacity:.85}
+
+  /* toast */
+  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:11px 20px;border-radius:24px;font-size:13px;font-weight:500;white-space:nowrap;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+  .toast.on{opacity:1}
+
+  /* spinner */
+  .spin{display:inline-block;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:8px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+
+  /* error */
+  .err-box{background:var(--red-l);border:1px solid var(--red);border-radius:var(--rs);padding:11px 14px;font-size:13px;color:var(--red);margin-bottom:14px;display:none}
+  .err-box.on{display:block}
+</style>
+</head>
+<body>
+
+<!-- ── ECRÃ: CONFIG em falta ── -->
+<div class="screen on" id="s-noconfig">
+  <div class="sp"></div>
+  <div class="big-ic">⚙️</div>
+  <div class="big-t">Configuração necessária</div>
+  <div class="big-s">Abre o ficheiro HTML e preenche as variáveis SUPABASE_URL e SUPABASE_ANON_KEY no topo do script.</div>
+  <div class="sp"></div>
+</div>
+
+<!-- ── ECRÃ: REGISTO ── -->
+<div class="screen" id="s-reg">
+  <h1>Como estás?</h1>
+  <p class="sub">Regista-te para partilhar o teu estado emocional com o grupo.</p>
+  <div class="field">
+    <label>O teu nome completo</label>
+    <input type="text" id="r-nome" placeholder="ex: Maria Silva" autocomplete="name">
+  </div>
+  <div class="field">
+    <label>O teu email</label>
+    <input type="email" id="r-email" placeholder="ex: maria@email.com" autocomplete="email">
+    <div class="hint">Receberás um código de confirmação por email.</div>
+  </div>
+  <div class="err-box" id="r-err"></div>
+  <div class="sp"></div>
+  <button class="btn btn-p" id="r-btn" onclick="submitReg()">Pedir acesso</button>
+  <div class="gap"></div>
+  <button class="btn btn-g" onclick="show('s-login')">Já tenho acesso → entrar</button>
+</div>
+
+<!-- ── ECRÃ: AGUARDAR APROVAÇÃO ── -->
+<div class="screen" id="s-pend">
+  <div class="sp"></div>
+  <div class="big-ic">📬</div>
+  <div class="big-t">Pedido enviado</div>
+  <div class="big-s">O administrador irá rever o teu pedido.<br>Receberás um email quando fores aprovado/a.</div>
+  <div class="sp"></div>
+  <button class="btn btn-g" onclick="show('s-login')">Já fui aprovado/a → entrar</button>
+</div>
+
+<!-- ── ECRÃ: LOGIN ── -->
+<div class="screen" id="s-login">
+  <h1>Entrar</h1>
+  <p class="sub">Introduz o teu email. Enviamos um código de 6 dígitos para confirmar a tua identidade.</p>
+  <div class="field">
+    <label>Email</label>
+    <input type="email" id="l-email" placeholder="o teu email" autocomplete="email">
+  </div>
+  <div class="err-box" id="l-err"></div>
+  <div class="sp"></div>
+  <button class="btn btn-p" id="l-btn" onclick="sendOTP()">Enviar código</button>
+  <div class="gap"></div>
+  <button class="btn btn-g" onclick="show('s-reg')">← Pedir acesso</button>
+</div>
+
+<!-- ── ECRÃ: VERIFICAR OTP ── -->
+<div class="screen" id="s-otp">
+  <h1>Código enviado</h1>
+  <p class="sub">Introduz os 6 dígitos que enviámos para <strong id="otp-email-lbl"></strong></p>
+  <div class="otp-row" id="otp-row">
+    <input class="otp-box" maxlength="1" type="tel" inputmode="numeric">
+    <input class="otp-box" maxlength="1" type="tel" inputmode="numeric">
+    <input class="otp-box" maxlength="1" type="tel" inputmode="numeric">
+    <input class="otp-box" maxlength="1" type="tel" inputmode="numeric">
+    <input class="otp-box" maxlength="1" type="tel" inputmode="numeric">
+    <input class="otp-box" maxlength="1" type="tel" inputmode="numeric">
+  </div>
+  <div class="err-box" id="otp-err"></div>
+  <button class="btn btn-p" id="otp-btn" onclick="verifyOTP()">Verificar</button>
+  <div class="gap"></div>
+  <button class="btn btn-g" onclick="show('s-login')">← Voltar</button>
+</div>
+
+<!-- ── ECRÃ: EMOÇÕES ── -->
+<div class="screen" id="s-emo">
+  <div class="prof">
+    <div class="av" id="u-av">--</div>
+    <div class="pi">
+      <div class="pn" id="u-nome">—</div>
+      <div class="pe" id="u-email">—</div>
+    </div>
+    <button class="btn btn-g btn-sm" onclick="logout()">Sair</button>
+  </div>
+
+  <div class="pend-ban" id="pend-ban" style="display:none">
+    <div class="pt">⏳ Aguarda aprovação</div>
+    <div class="ps">O administrador ainda não aprovou o teu acesso.</div>
+  </div>
+
+  <div id="emo-form">
+    <div class="sec">Como te sentes agora?</div>
+    <div class="emo-grid">
+      <div class="emo-card ec-alegria" onclick="selEmo('alegria',this)"><div class="ic">😄</div><div class="lb">Alegria</div><div class="sb">positivo, animado</div></div>
+      <div class="emo-card ec-tristeza" onclick="selEmo('tristeza',this)"><div class="ic">😢</div><div class="lb">Tristeza</div><div class="sb">em baixo, pesado</div></div>
+      <div class="emo-card ec-medo" onclick="selEmo('medo',this)"><div class="ic">😨</div><div class="lb">Ansiedade</div><div class="sb">nervoso, com medo</div></div>
+      <div class="emo-card ec-raiva" onclick="selEmo('raiva',this)"><div class="ic">😠</div><div class="lb">Frustração</div><div class="sb">irritado, raiva</div></div>
+      <div class="emo-card ec-calma" onclick="selEmo('calma',this)"><div class="ic">😌</div><div class="lb">Calma</div><div class="sb">tranquilo, em paz</div></div>
+      <div class="emo-card ec-misto" onclick="selEmo('misto',this)"><div class="ic">😐</div><div class="lb">Misto</div><div class="sb">difícil de definir</div></div>
+    </div>
+    <div class="sec">Intensidade</div>
+    <div class="sl-wrap">
+      <input type="range" id="intensity" min="1" max="5" value="3" step="1">
+      <div class="sl-labs"><span>Leve</span><span>Moderado</span><span>Intenso</span></div>
+    </div>
+    <div class="field">
+      <label>Nota (opcional)</label>
+      <textarea id="nota" placeholder="O que está a acontecer? Partilha à vontade…"></textarea>
+    </div>
+    <div class="err-box" id="emo-err"></div>
+    <button class="btn btn-p" id="emo-btn" onclick="submitEmo()">Partilhar estado</button>
+  </div>
+</div>
+
+<!-- ── ECRÃ: ENVIADO ── -->
+<div class="screen" id="s-sent">
+  <div class="sp"></div>
+  <div class="big-ic" id="sent-ic">😄</div>
+  <div class="big-t">Partilhado!</div>
+  <div class="big-s" id="sent-msg">O teu estado foi registado com sucesso.</div>
+  <div class="sp"></div>
+  <button class="btn btn-p" onclick="backToEmo()">← Actualizar de novo</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════
+//  CONFIGURAÇÃO — preenche estes dois valores
+// ════════════════════════════════════════════
+const SUPABASE_URL      = "https://dxzdfzjrxhjwbeluwpsy.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4emRmempyeGhqd2JlbHV3cHN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTM4ODAsImV4cCI6MjA5NDgyOTg4MH0.3o7igGA5D6C8DvUnz8vGg9ZZ_NMNQK6azw1svThNUfo";
+// ════════════════════════════════════════════
+
+const emo_labels = {alegria:"Alegria",tristeza:"Tristeza",medo:"Ansiedade",raiva:"Frustração",calma:"Calma",misto:"Misto"};
+const emo_emojis = {alegria:"😄",tristeza:"😢",medo:"😨",raiva:"😠",calma:"😌",misto:"😐"};
+const int_labels = ["","Leve","Leve-moderado","Moderado","Moderado-intenso","Intenso"];
+
+let sb = null;
+let currentUser = null;
+let currentProfile = null;
+let selectedEmo = null;
+let otpEmail = "";
+
+// ── boot ──
+async function boot() {
+  if (SUPABASE_URL === "SUPABASE_URL_AQUI" || SUPABASE_ANON_KEY === "SUPABASE_ANON_KEY_AQUI") {
+    show("s-noconfig"); return;
+  }
+  const { createClient } = supabase;
+  sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    await loadProfile(session.user);
+  } else {
+    show("s-reg");
+  }
+
+  sb.auth.onAuthStateChange(async (_ev, session) => {
+    if (session) await loadProfile(session.user);
+  });
+
+  // OTP input navigation
+  const boxes = document.querySelectorAll(".otp-box");
+  boxes.forEach((box, i) => {
+    box.addEventListener("input", e => {
+      const v = e.target.value.replace(/\D/g,"");
+      e.target.value = v.slice(-1);
+      if (v && i < boxes.length - 1) boxes[i+1].focus();
+    });
+    box.addEventListener("keydown", e => {
+      if (e.key === "Backspace" && !box.value && i > 0) boxes[i-1].focus();
+    });
+    box.addEventListener("paste", e => {
+      e.preventDefault();
+      const paste = (e.clipboardData||window.clipboardData).getData("text").replace(/\D/g,"").slice(0,6);
+      [...paste].forEach((ch, j) => { if (boxes[j]) boxes[j].value = ch; });
+      if (boxes[Math.min(paste.length, 5)]) boxes[Math.min(paste.length, 5)].focus();
+    });
+  });
+}
+
+async function loadProfile(user) {
+  // Procura perfil por email em vez de id
+  const { data: profile } = await sb.from("profiles").select("*").eq("email", user.email).single();
+  if (!profile) {
+    currentUser = user;
+    show("s-reg");
+    document.getElementById("r-email").value = user.email;
+    return;
+  }
+
+  // Sincroniza o id do perfil com o id do Auth se ainda não estiver feito
+  if (profile.id !== user.id) {
+    await sb.from("profiles").update({ id: user.id }).eq("email", user.email);
+    profile.id = user.id;
+  }
+
+  currentProfile = profile;
+  currentUser = user;
+  document.getElementById("u-nome").textContent = profile.nome;
+  document.getElementById("u-email").textContent = user.email;
+  document.getElementById("u-av").textContent = initials(profile.nome);
+
+  if (!profile.approved) {
+    document.getElementById("pend-ban").style.display = "block";
+    document.getElementById("emo-form").style.opacity = "0.4";
+    document.getElementById("emo-form").style.pointerEvents = "none";
+  } else {
+    document.getElementById("pend-ban").style.display = "none";
+    document.getElementById("emo-form").style.opacity = "1";
+    document.getElementById("emo-form").style.pointerEvents = "auto";
+  }
+  show("s-emo");
+}
+
+// ── registo ──
+async function submitReg() {
+  const nome = document.getElementById("r-nome").value.trim();
+  const email = document.getElementById("r-email").value.trim().toLowerCase();
+  const err = document.getElementById("r-err");
+  err.classList.remove("on");
+
+  if (!nome || nome.length < 2) { showErr(err, "Introduz o teu nome completo."); return; }
+  if (!email || !email.includes("@")) { showErr(err, "Introduz um email válido."); return; }
+
+  setLoading("r-btn", true);
+  try {
+    // upsert profile (pending approval)
+    const { error: pe } = await sb.from("profiles").upsert({
+      email, nome, approved: false, requested_at: new Date().toISOString()
+    }, { onConflict: "email" });
+    if (pe) throw pe;
+    show("s-pend");
+  } catch(e) {
+    showErr(err, "Erro ao enviar pedido. Tenta novamente.");
+    console.error(e);
+  }
+  setLoading("r-btn", false);
+}
+
+// ── login OTP ──
+async function sendOTP() {
+  const email = document.getElementById("l-email").value.trim().toLowerCase();
+  const err = document.getElementById("l-err");
+  err.classList.remove("on");
+  if (!email || !email.includes("@")) { showErr(err, "Introduz um email válido."); return; }
+
+  setLoading("l-btn", true);
+  const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: false } });
+  if (error) {
+    if (error.message.includes("not found") || error.status === 422) {
+      showErr(err, "Email não encontrado. Pede acesso primeiro.");
+    } else {
+      showErr(err, "Erro ao enviar código. Tenta novamente.");
+    }
+    setLoading("l-btn", false);
+    return;
+  }
+  otpEmail = email;
+  document.getElementById("otp-email-lbl").textContent = email;
+  document.querySelectorAll(".otp-box").forEach(b => b.value = "");
+  show("s-otp");
+  setTimeout(() => document.querySelector(".otp-box").focus(), 300);
+  setLoading("l-btn", false);
+}
+
+async function verifyOTP() {
+  const token = [...document.querySelectorAll(".otp-box")].map(b => b.value).join("");
+  const err = document.getElementById("otp-err");
+  err.classList.remove("on");
+  if (token.length < 6) { showErr(err, "Introduz os 6 dígitos do código."); return; }
+
+  setLoading("otp-btn", true);
+  const { error } = await sb.auth.verifyOtp({ email: otpEmail, token, type: "email" });
+  if (error) {
+    showErr(err, "Código incorrecto ou expirado. Pede um novo.");
+    setLoading("otp-btn", false);
+    return;
+  }
+  // onAuthStateChange will handle the rest
+  setLoading("otp-btn", false);
+}
+
+// ── emoções ──
+function selEmo(emo, el) {
+  selectedEmo = emo;
+  document.querySelectorAll(".emo-card").forEach(c => c.classList.remove("sel"));
+  el.classList.add("sel");
+}
+
+async function submitEmo() {
+  const err = document.getElementById("emo-err");
+  err.classList.remove("on");
+  if (!selectedEmo) { showErr(err, "Escolhe como te sentes antes de partilhar."); return; }
+  if (!currentProfile?.approved) { showErr(err, "O teu acesso ainda não foi aprovado."); return; }
+
+  const intensidade = parseInt(document.getElementById("intensity").value);
+  const nota = document.getElementById("nota").value.trim();
+
+  setLoading("emo-btn", true);
+  const { error } = await sb.from("registos").insert({
+    user_id: currentUser.id,
+    nome: currentProfile.nome,
+    emocao: selectedEmo,
+    intensidade,
+    nota: nota || null,
+    created_at: new Date().toISOString()
+  });
+  if (error) {
+    showErr(err, "Erro ao guardar. Tenta novamente.");
+    console.error(error);
+    setLoading("emo-btn", false);
+    return;
+  }
+  document.getElementById("sent-ic").textContent = emo_emojis[selectedEmo];
+  document.getElementById("sent-msg").textContent =
+    `${emo_labels[selectedEmo]} · ${int_labels[intensidade]}` +
+    (nota ? `\n"${nota}"` : "\nEstado registado com sucesso.");
+  show("s-sent");
+  setLoading("emo-btn", false);
+}
+
+function backToEmo() {
+  selectedEmo = null;
+  document.querySelectorAll(".emo-card").forEach(c => c.classList.remove("sel"));
+  document.getElementById("nota").value = "";
+  document.getElementById("intensity").value = 3;
+  show("s-emo");
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  currentUser = null; currentProfile = null; selectedEmo = null;
+  show("s-reg");
+}
+
+// ── helpers ──
+function show(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("on"));
+  document.getElementById(id).classList.add("on");
+}
+function showErr(el, msg) { el.textContent = msg; el.classList.add("on"); }
+function initials(n) { return (n||"?").split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase(); }
+function setLoading(id, on) {
+  const b = document.getElementById(id);
+  if (!b) return;
+  b.disabled = on;
+  if (on) { b._orig = b.innerHTML; b.innerHTML = `<span class="spin"></span>A processar…`; }
+  else b.innerHTML = b._orig || b.innerHTML;
+}
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("on");
+  setTimeout(() => t.classList.remove("on"), 2500);
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"
+  onload="boot()" onerror="document.getElementById('s-noconfig').querySelector('.big-s').textContent='Erro ao carregar Supabase. Verifica a tua ligação à internet.'">
+</script>
+</body>
+</html>
