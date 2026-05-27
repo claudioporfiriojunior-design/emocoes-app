@@ -342,12 +342,16 @@ async function submitReg() {
 
   setLoading("r-btn", true);
   try {
-    // upsert profile (pending approval)
-    const { error: pe } = await sb.from("profiles").upsert({
-      email, nome, approved: false, requested_at: new Date().toISOString()
-    }, { onConflict: "email" });
-    if (pe) throw pe;
-    show("s-pend");
+   // verificar se já existe
+const { data: existing } = await sb.from("profiles").select("email").eq("email", email).maybeSingle();
+
+if (!existing) {
+  const { error: pe } = await sb.from("profiles").insert({
+    email, nome, approved: false, requested_at: new Date().toISOString()
+  });
+  if (pe) throw pe;
+}
+show("s-pend");
   } catch(e) {
     showErr(err, "Erro ao enviar pedido. Tenta novamente.");
     console.error(e);
