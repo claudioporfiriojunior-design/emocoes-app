@@ -112,6 +112,12 @@
   .err-box{background:var(--red-l);border:1px solid var(--red);border-radius:var(--rs);padding:11px 14px;font-size:13px;color:var(--red);margin-bottom:14px;display:none}
   .err-box.on{display:block}
 </style>
+  
+<!-- ── VALIDAÇÃO DO SUPABASE ANTES DO CHECK ── -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"
+  onload="boot()" onerror="document.getElementById('s-noconfig').querySelector('.big-s').textContent='Erro ao carregar Supabase. Verifica a tua ligação à internet.'">
+</script>
+  
 </head>
 <body>
 
@@ -476,8 +482,6 @@ function toast(msg) {
 }
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"
-  onload="boot()" onerror="document.getElementById('s-noconfig').querySelector('.big-s').textContent='Erro ao carregar Supabase. Verifica a tua ligação à internet.'">
-</script>
+
 </body>
 </html>
