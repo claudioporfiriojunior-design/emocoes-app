@@ -29,7 +29,7 @@
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   body{font-family:-apple-system,'Helvetica Neue',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;max-width:430px;margin:0 auto}
 
-  /* ── HEADER ── */
+  /* ��─ HEADER ── */
   .header{display:flex;align-items:center;gap:12px;padding:20px 20px 0;margin-bottom:24px;border-bottom:1px solid var(--bd);padding-bottom:16px}
   .header-back{width:32px;height:32px;border:none;background:var(--bg2);border-radius:var(--rs);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s}
   .header-back:active{transform:scale(.95);opacity:.7}
@@ -142,9 +142,9 @@
 
 <!-- ── TABS ── -->
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('week')">7 Dias</button>
-  <button class="tab-btn" onclick="switchTab('month')">15 Dias</button>
-  <button class="tab-btn" onclick="switchTab('year')">Mês</button>
+  <button class="tab-btn active" onclick="switchTab(event, 'week')">7 Dias</button>
+  <button class="tab-btn" onclick="switchTab(event, 'month')">15 Dias</button>
+  <button class="tab-btn" onclick="switchTab(event, 'year')">Mês</button>
 </div>
 
 <!-- ── TAB: 7 DIAS ── -->
@@ -184,7 +184,7 @@
 //  CONFIGURAÇÃO — mesmas variáveis de index.html
 // ════════════════════════════════════════════
 const SUPABASE_URL      = "https://dxzdfzjrxhjwbeluwpsy.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4emRmempyeGhqd2JlbHV3cHN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTM4ODAsImV4cCI6MjA5NDgyOTg4MH0.3o7[...]";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4emRmempyeGhqd2JlbHV3cHN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTM4ODAsImV4cCI6MjA5NDgyOTg4MH0.3o7YxGsYO93llRtcx2cIWmLHVvGvNS3RidqvXGPWzO8";
 // ════════════════════════════════════════════
 
 const emo_labels = {alegria:"Alegria",tristeza:"Tristeza",medo:"Ansiedade",raiva:"Frustração",calma:"Calma",misto:"Misto"};
@@ -211,34 +211,48 @@ async function boot() {
   }
   
   currentUser = session.user;
+  console.log("✓ Utilizador logado:", currentUser.email);
   await loadData();
-  switchTab('week');
+  switchTab(null, 'week');
 }
 
 async function loadData() {
-  // Carregar últimas 30 dias de dados
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  
-  const { data, error } = await sb
-    .from('registos')
-    .select('*')
-    .eq('user_id', currentUser.id)
-    .gte('created_at', thirtyDaysAgo.toISOString())
-    .order('created_at', { ascending: false });
-  
-  if (error) {
-    console.error(error);
-    alert("Erro ao carregar dados");
-    return;
+  try {
+    // Carregar últimas 30 dias de dados
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    console.log("📊 Carregando dados desde:", thirtyDaysAgo.toISOString());
+    console.log("👤 User ID:", currentUser.id);
+    
+    const { data, error } = await sb
+      .from('registos')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .gte('created_at', thirtyDaysAgo.toISOString())
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error("❌ Erro ao carregar:", error);
+      alert(`Erro ao carregar dados: ${error.message}`);
+      return;
+    }
+    
+    allEntries = data || [];
+    console.log(`✓ Carregadas ${allEntries.length} entradas`);
+    
+    if (allEntries.length === 0) {
+      console.warn("⚠️ Nenhuma entrada encontrada para este utilizador");
+    }
+    
+    // Render tabs
+    renderWeekView();
+    renderMonthView();
+    renderYearView();
+  } catch(e) {
+    console.error("Exception:", e);
+    alert(`Erro: ${e.message}`);
   }
-  
-  allEntries = data || [];
-  
-  // Render tabs
-  renderWeekView();
-  renderMonthView();
-  renderYearView();
 }
 
 // ── FUNÇÕES AUXILIARES ──
@@ -504,7 +518,7 @@ function renderYearView() {
   const maxIntCount = Math.max(...intensityCounts);
   
   for (let i = 1; i <= 5; i++) {
-    const width = (intensityCounts[i] / maxIntCount) * 100;
+    const width = maxIntCount > 0 ? (intensityCounts[i] / maxIntCount) * 100 : 0;
     intensityHTML += `
       <div class="chart-row">
         <div class="chart-label">${int_labels[i]}</div>
@@ -554,12 +568,13 @@ document.getElementById('day-modal').addEventListener('click', e => {
 });
 
 // ── TABS ──
-function switchTab(tab) {
+function switchTab(event, tab) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   
   document.getElementById(`tab-${tab}`).classList.add('active');
-  event.target.classList.add('active');
+  if (event) event.target.classList.add('active');
+  else document.querySelector(`[onclick*="'${tab}'"]`).classList.add('active');
 }
 
 function goBack() {
