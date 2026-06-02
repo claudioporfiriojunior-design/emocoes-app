@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#1D9E75">
+<title>Meu Histórico</title>
+<style>
+  :root {
+    --teal:#1D9E75;--teal-l:#E1F5EE;--teal-d:#0F6E56;
+    --amber:#BA7517;--amber-l:#FAEEDA;
+    --blue:#378ADD;--blue-l:#E6F1FB;
+    --coral:#D85A30;--coral-l:#FAECE7;
+    --purple:#7F77DD;--purple-l:#EEEDFE;
+    --red:#E24B4A;--red-l:#FCEBEB;
+    --gray:#888780;--gray-l:#F1EFE8;
+    --tx:#1a1a1a;--tx2:#666;--tx3:#999;
+    --bg:#fff;--bg2:#f7f7f5;--bd:rgba(0,0,0,.09);
+    --r:14px;--rs:8px;
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --tx:#f0efe8;--tx2:#aaa;--tx3:#555;
+    --bg:#1a1a1a;--bg2:#242424;--bd:rgba(255,255,255,.09);
+    --teal-l:#04342C;--amber-l:#412402;--blue-l:#042C53;
+    --coral-l:#4A1B0C;--purple-l:#26215C;--red-l:#501313;--gray-l:#2C2C2A;
+  }}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,'Helvetica Neue',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;max-width:430px;margin:0 auto}
+
+  /* ── HEADER ── */
+  .header{display:flex;align-items:center;gap:12px;padding:20px 20px 0;margin-bottom:24px;border-bottom:1px solid var(--bd);padding-bottom:16px}
+  .header-back{width:32px;height:32px;border:none;background:var(--bg2);border-radius:var(--rs);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+  .header-back:active{transform:scale(.95);opacity:.7}
+  .header-title{flex:1;font-size:18px;font-weight:700}
+
+  /* ── TABS ── */
+  .tabs{display:flex;gap:0;padding:0 20px;margin-bottom:24px;border-bottom:1.5px solid var(--bd)}
+  .tab-btn{flex:1;padding:12px 0;border:none;background:none;color:var(--tx2);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;position:relative;text-align:center;border-bottom:2.5px solid transparent}
+  .tab-btn.active{color:var(--tx);border-bottom-color:var(--teal)}
+  .tab-btn:active{opacity:.7}
+
+  /* ── CONTENT ── */
+  .tab-content{display:none;padding:0 20px;animation:fadeIn .2s}
+  .tab-content.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ── STATS BAR ── */
+  .stats-bar{background:var(--bg2);border-radius:var(--r);border:1px solid var(--bd);padding:16px;margin-bottom:20px}
+  .stat-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:12px}
+  .stat-row:last-child{margin-bottom:0}
+  .stat-label{flex:1;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2)}
+  .stat-icon{font-size:18px}
+  .stat-bar-wrap{flex:2;height:6px;background:var(--bd);border-radius:3px;overflow:hidden;position:relative}
+  .stat-bar{height:100%;border-radius:3px;transition:width .3s}
+  .stat-count{font-size:12px;color:var(--tx3);min-width:28px;text-align:right}
+
+  /* ── DAY CARD ── */
+  .day-card{background:var(--bg2);border-radius:var(--r);border:1px solid var(--bd);padding:14px;margin-bottom:12px;cursor:pointer;transition:all .2s}
+  .day-card:active{transform:scale(.98);opacity:.85}
+  .day-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .day-date{font-size:13px;font-weight:700;color:var(--tx)}
+  .day-count{font-size:12px;color:var(--tx3)}
+  .day-bars{display:flex;flex-direction:column;gap:6px}
+  .bar-item{display:flex;align-items:center;gap:8px;height:24px;border-radius:var(--rs);padding:0 8px;font-size:12px;font-weight:600;color:#fff;transition:width .3s;min-width:auto}
+  .bar-item.empty{display:none}
+
+  /* ── TIMELINE ── */
+  .timeline{position:relative;padding-left:0}
+  .timeline::before{content:'';position:absolute;left:11px;top:8px;bottom:0;width:2px;background:var(--bd)}
+  .timeline-item{display:flex;gap:16px;margin-bottom:16px;position:relative}
+  .timeline-dot{width:24px;height:24px;border-radius:50%;background:var(--bg);border:2.5px solid var(--teal);flex-shrink:0;position:relative;z-index:1}
+  .timeline-content{flex:1;background:var(--bg2);border-radius:var(--r);border:1px solid var(--bd);padding:12px 14px}
+  .timeline-date{font-size:12px;color:var(--tx3);margin-bottom:4px}
+  .timeline-emo{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;margin-bottom:4px}
+  .timeline-intensity{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--tx2);margin-bottom:6px}
+  .intensity-bar{width:60px;height:4px;background:var(--bd);border-radius:2px;overflow:hidden}
+  .intensity-fill{height:100%;background:var(--teal);border-radius:2px}
+  .timeline-note{font-size:12px;color:var(--tx2);font-style:italic;max-height:60px;overflow:hidden;text-overflow:ellipsis}
+
+  /* ── MONTH SUMMARY ── */
+  .month-summary{background:var(--bg2);border-radius:var(--r);border:1px solid var(--bd);padding:16px;margin-bottom:20px}
+  .month-title{font-size:14px;font-weight:700;margin-bottom:12px;color:var(--tx)}
+  .summary-stat{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+  .summary-stat:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .summary-label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2)}
+  .summary-value{font-size:13px;font-weight:600;color:var(--tx)}
+
+  /* ── INTENSITY CHART ── */
+  .intensity-chart{background:var(--bg2);border-radius:var(--r);border:1px solid var(--bd);padding:16px;margin-bottom:20px}
+  .chart-title{font-size:13px;font-weight:700;margin-bottom:12px;color:var(--tx)}
+  .chart-bars{display:flex;flex-direction:column;gap:10px}
+  .chart-row{display:flex;align-items:center;gap:8px}
+  .chart-label{width:60px;font-size:12px;color:var(--tx2)}
+  .chart-bar-wrap{flex:1;height:8px;background:var(--bd);border-radius:4px;overflow:hidden}
+  .chart-bar{height:100%;border-radius:4px;background:var(--teal)}
+  .chart-value{width:40px;text-align:right;font-size:11px;color:var(--tx3)}
+
+  /* ── EMPTY STATE ── */
+  .empty-state{text-align:center;padding:40px 20px;color:var(--tx2)}
+  .empty-icon{font-size:48px;margin-bottom:12px;opacity:.7}
+  .empty-text{font-size:14px;color:var(--tx2)}
+
+  /* ── MODAL ── */
+  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:flex-end;animation:slideUp .3s}
+  .modal.on{display:flex}
+  .modal-content{background:var(--bg);border-radius:var(--r) var(--r) 0 0;padding:20px;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp .3s}
+  .modal-header{font-size:16px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--bd)}
+  .modal-close{position:absolute;top:16px;right:16px;width:28px;height:28px;background:var(--bg2);border:none;border-radius:var(--rs);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
+  .entry-item{display:flex;gap:12px;padding:12px;background:var(--bg2);border-radius:var(--rs);margin-bottom:8px;border-left:3px solid var(--teal)}
+  .entry-time{font-size:12px;color:var(--tx3);min-width:50px}
+  .entry-details{flex:1;min-width:0}
+  .entry-emo-intensity{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;margin-bottom:4px}
+  .entry-note{font-size:12px;color:var(--tx2);line-height:1.4}
+  @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+
+  /* ── BUTTONS ── */
+  .btn-sm{width:auto;padding:7px 14px;font-size:13px;border-radius:var(--rs);border:none;background:var(--bg2);color:var(--tx2);cursor:pointer;transition:all .2s;border:1.5px solid var(--bd)}
+  .btn-sm:active{transform:scale(.95);opacity:.7}
+
+  /* ── LOADING ── */
+  .spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(0,0,0,.2);border-top-color:var(--tx);border-radius:50%;animation:sp .7s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:380px){
+    .tabs{padding:0 12px}
+    .header{padding:16px 12px 0}
+    .tab-content{padding:0 12px}
+    .bar-item{font-size:11px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <button class="header-back" onclick="goBack()">←</button>
+  <div class="header-title">Meu Histórico</div>
+</div>
+
+<!-- ── TABS ── -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('week')">7 Dias</button>
+  <button class="tab-btn" onclick="switchTab('month')">15 Dias</button>
+  <button class="tab-btn" onclick="switchTab('year')">Mês</button>
+</div>
+
+<!-- ── TAB: 7 DIAS ── -->
+<div class="tab-content active" id="tab-week">
+  <div id="week-stats" class="stats-bar">
+    <div class="spin" style="justify-content:center"></div>
+  </div>
+  <div id="week-days"></div>
+</div>
+
+<!-- ── TAB: 15 DIAS ── -->
+<div class="tab-content" id="tab-month">
+  <div id="month-stats" class="stats-bar">
+    <div class="spin" style="justify-content:center"></div>
+  </div>
+  <div id="month-timeline" class="timeline"></div>
+</div>
+
+<!-- ── TAB: 1 MÊS ── -->
+<div class="tab-content" id="tab-year">
+  <div id="year-summary" class="month-summary"></div>
+  <div id="year-intensity" class="intensity-chart"></div>
+</div>
+
+<!-- ── MODAL DE DETALHES ── -->
+<div class="modal" id="day-modal">
+  <div class="modal-content">
+    <div class="modal-header" id="modal-title">Entradas do dia</div>
+    <div id="modal-entries"></div>
+  </div>
+</div>
+
+<div style="height:40px"></div>
+
+<script>
+// ════════════════════════════════════════════
+//  CONFIGURAÇÃO — mesmas variáveis de index.html
+// ════════════════════════════════════════════
+const SUPABASE_URL      = "https://dxzdfzjrxhjwbeluwpsy.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4emRmempyeGhqd2JlbHV3cHN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTM4ODAsImV4cCI6MjA5NDgyOTg4MH0.3o7[...]";
+// ════════════════════════════════════════════
+
+const emo_labels = {alegria:"Alegria",tristeza:"Tristeza",medo:"Ansiedade",raiva:"Frustração",calma:"Calma",misto:"Misto"};
+const emo_emojis = {alegria:"😄",tristeza:"😢",medo:"😨",raiva:"😠",calma:"😌",misto:"😐"};
+const emo_colors = {
+  alegria:"var(--amber)",tristeza:"var(--blue)",medo:"var(--purple)",
+  raiva:"var(--coral)",calma:"var(--teal)",misto:"var(--gray)"
+};
+const int_labels = ["","Leve","Leve-moderado","Moderado","Moderado-intenso","Intenso"];
+
+let sb = null;
+let currentUser = null;
+let allEntries = [];
+
+async function boot() {
+  const { createClient } = supabase;
+  sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    alert("Debes estar logado para ver o histórico.");
+    window.location.href = "index.html";
+    return;
+  }
+  
+  currentUser = session.user;
+  await loadData();
+  switchTab('week');
+}
+
+async function loadData() {
+  // Carregar últimas 30 dias de dados
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  
+  const { data, error } = await sb
+    .from('registos')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .gte('created_at', thirtyDaysAgo.toISOString())
+    .order('created_at', { ascending: false });
+  
+  if (error) {
+    console.error(error);
+    alert("Erro ao carregar dados");
+    return;
+  }
+  
+  allEntries = data || [];
+  
+  // Render tabs
+  renderWeekView();
+  renderMonthView();
+  renderYearView();
+}
+
+// ── FUNÇÕES AUXILIARES ──
+function getDaysAgo(n) {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+function getDateKey(date) {
+  return date.toISOString().split('T')[0];
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  
+  const dayKey = getDateKey(d);
+  const todayKey = getDateKey(today);
+  const yesterdayKey = getDateKey(yesterday);
+  
+  if (dayKey === todayKey) return "Hoje";
+  if (dayKey === yesterdayKey) return "Ontem";
+  
+  return d.toLocaleDateString('pt-PT', {month:'short', day:'numeric'});
+}
+
+function formatTime(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleTimeString('pt-PT', {hour:'2-digit', minute:'2-digit'});
+}
+
+function groupByDate(entries) {
+  const grouped = {};
+  entries.forEach(e => {
+    const key = getDateKey(new Date(e.created_at));
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(e);
+  });
+  return grouped;
+}
+
+function countEmotions(entries) {
+  const counts = {alegria:0, tristeza:0, medo:0, raiva:0, calma:0, misto:0};
+  entries.forEach(e => {
+    if (counts.hasOwnProperty(e.emocao)) counts[e.emocao]++;
+  });
+  return counts;
+}
+
+function averageIntensity(entries) {
+  if (!entries.length) return 0;
+  const sum = entries.reduce((a,e) => a + (e.intensidade || 0), 0);
+  return (sum / entries.length).toFixed(1);
+}
+
+// ── RENDER: 7 DIAS ──
+function renderWeekView() {
+  const container = document.getElementById('week-days');
+  const statsContainer = document.getElementById('week-stats');
+  
+  const entries7days = allEntries.filter(e => {
+    const eDate = new Date(e.created_at);
+    const sevenDaysAgo = getDaysAgo(7);
+    return eDate >= sevenDaysAgo;
+  });
+  
+  if (!entries7days.length) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">Sem registos neste período.</div></div>';
+    statsContainer.innerHTML = '';
+    return;
+  }
+  
+  const counts = countEmotions(entries7days);
+  const total = entries7days.length;
+  const maxCount = Math.max(...Object.values(counts));
+  
+  // Stats
+  let statsHTML = '';
+  Object.entries(counts).forEach(([emo, count]) => {
+    if (count === 0) return;
+    const pct = ((count / total) * 100).toFixed(0);
+    const width = (count / maxCount) * 100;
+    statsHTML += `
+      <div class="stat-row">
+        <div class="stat-label">
+          <span class="stat-icon">${emo_emojis[emo]}</span>
+          <span>${emo_labels[emo]}</span>
+        </div>
+        <div class="stat-bar-wrap">
+          <div class="stat-bar" style="width:${width}%;background:${emo_colors[emo]};"></div>
+        </div>
+        <div class="stat-count">${count}</div>
+      </div>
+    `;
+  });
+  statsContainer.innerHTML = statsHTML;
+  
+  // Days
+  const grouped = groupByDate(entries7days);
+  const sortedDates = Object.keys(grouped).sort().reverse();
+  
+  let daysHTML = '';
+  sortedDates.forEach(dateKey => {
+    const dayEntries = grouped[dateKey];
+    const dayDate = new Date(dateKey + 'T00:00:00');
+    const dayCounts = countEmotions(dayEntries);
+    
+    let barsHTML = '';
+    Object.entries(dayCounts).forEach(([emo, count]) => {
+      if (count === 0) return;
+      barsHTML += `
+        <div class="bar-item" style="background:${emo_colors[emo]};width:${(count/dayEntries.length)*100}%">
+          ${emo_emojis[emo]} ${count}
+        </div>
+      `;
+    });
+    
+    daysHTML += `
+      <div class="day-card" onclick="openDayModal('${dateKey}')">
+        <div class="day-header">
+          <div class="day-date">${formatDate(dateKey + 'T00:00:00')}</div>
+          <div class="day-count">${dayEntries.length} ${dayEntries.length === 1 ? 'entrada' : 'entradas'}</div>
+        </div>
+        <div class="day-bars">${barsHTML}</div>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = daysHTML;
+}
+
+// ── RENDER: 15 DIAS ──
+function renderMonthView() {
+  const container = document.getElementById('month-timeline');
+  const statsContainer = document.getElementById('month-stats');
+  
+  const entries15days = allEntries.filter(e => {
+    const eDate = new Date(e.created_at);
+    const fifteenDaysAgo = getDaysAgo(15);
+    return eDate >= fifteenDaysAgo;
+  });
+  
+  if (!entries15days.length) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">Sem registos neste período.</div></div>';
+    statsContainer.innerHTML = '';
+    return;
+  }
+  
+  const counts = countEmotions(entries15days);
+  const total = entries15days.length;
+  const maxCount = Math.max(...Object.values(counts));
+  
+  // Stats
+  let statsHTML = '';
+  Object.entries(counts).forEach(([emo, count]) => {
+    if (count === 0) return;
+    const pct = ((count / total) * 100).toFixed(0);
+    const width = (count / maxCount) * 100;
+    statsHTML += `
+      <div class="stat-row">
+        <div class="stat-label">
+          <span class="stat-icon">${emo_emojis[emo]}</span>
+          <span>${emo_labels[emo]}</span>
+        </div>
+        <div class="stat-bar-wrap">
+          <div class="stat-bar" style="width:${width}%;background:${emo_colors[emo]};"></div>
+        </div>
+        <div class="stat-count">${count}</div>
+      </div>
+    `;
+  });
+  statsContainer.innerHTML = statsHTML;
+  
+  // Timeline
+  let timelineHTML = '';
+  entries15days.forEach(entry => {
+    const intensityPct = (entry.intensidade / 5) * 100;
+    timelineHTML += `
+      <div class="timeline-item">
+        <div class="timeline-dot" style="border-color:${emo_colors[entry.emocao]}"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">${formatDate(entry.created_at)} · ${formatTime(entry.created_at)}</div>
+          <div class="timeline-emo" style="color:${emo_colors[entry.emocao]}">
+            ${emo_emojis[entry.emocao]} ${emo_labels[entry.emocao]}
+          </div>
+          <div class="timeline-intensity">
+            <span>${int_labels[entry.intensidade]}</span>
+            <div class="intensity-bar">
+              <div class="intensity-fill" style="width:${intensityPct}%;background:${emo_colors[entry.emocao]}"></div>
+            </div>
+          </div>
+          ${entry.nota ? `<div class="timeline-note">"${entry.nota}"</div>` : ''}
+        </div>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = timelineHTML;
+}
+
+// ── RENDER: 1 MÊS ──
+function renderYearView() {
+  const container = document.getElementById('year-summary');
+  const intensityContainer = document.getElementById('year-intensity');
+  
+  const entries30days = allEntries.filter(e => {
+    const eDate = new Date(e.created_at);
+    const thirtyDaysAgo = getDaysAgo(30);
+    return eDate >= thirtyDaysAgo;
+  });
+  
+  if (!entries30days.length) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">Sem registos neste mês.</div></div>';
+    intensityContainer.innerHTML = '';
+    return;
+  }
+  
+  const counts = countEmotions(entries30days);
+  const avgIntensity = averageIntensity(entries30days);
+  const total = entries30days.length;
+  const maxCount = Math.max(...Object.values(counts));
+  
+  // Summary
+  let summaryHTML = '<div class="month-title">Resumo do Mês</div>';
+  summaryHTML += `
+    <div class="summary-stat">
+      <div class="summary-label">Total de entradas</div>
+      <div class="summary-value">${total}</div>
+    </div>
+    <div class="summary-stat">
+      <div class="summary-label">Intensidade média</div>
+      <div class="summary-value">${avgIntensity} / 5</div>
+    </div>
+  `;
+  
+  Object.entries(counts).forEach(([emo, count]) => {
+    const pct = ((count / total) * 100).toFixed(0);
+    summaryHTML += `
+      <div class="summary-stat">
+        <div class="summary-label">
+          <span style="font-size:16px;margin-right:4px">${emo_emojis[emo]}</span>
+          ${emo_labels[emo]}
+        </div>
+        <div class="summary-value">${count} (${pct}%)</div>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = summaryHTML;
+  
+  // Intensity chart
+  let intensityHTML = '<div class="chart-title">Entradas por Intensidade</div><div class="chart-bars">';
+  const intensityCounts = [0,0,0,0,0,0];
+  entries30days.forEach(e => {
+    intensityCounts[e.intensidade]++;
+  });
+  
+  const maxIntCount = Math.max(...intensityCounts);
+  
+  for (let i = 1; i <= 5; i++) {
+    const width = (intensityCounts[i] / maxIntCount) * 100;
+    intensityHTML += `
+      <div class="chart-row">
+        <div class="chart-label">${int_labels[i]}</div>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar" style="width:${width}%"></div>
+        </div>
+        <div class="chart-value">${intensityCounts[i]}</div>
+      </div>
+    `;
+  }
+  
+  intensityHTML += '</div>';
+  intensityContainer.innerHTML = intensityHTML;
+}
+
+// ── MODAL ──
+function openDayModal(dateKey) {
+  const dayEntries = allEntries.filter(e => getDateKey(new Date(e.created_at)) === dateKey);
+  
+  document.getElementById('modal-title').textContent = `Entradas de ${formatDate(dateKey + 'T00:00:00')}`;
+  
+  let entriesHTML = '';
+  dayEntries.forEach(entry => {
+    entriesHTML += `
+      <div class="entry-item" style="border-left-color:${emo_colors[entry.emocao]}">
+        <div class="entry-time">${formatTime(entry.created_at)}</div>
+        <div class="entry-details">
+          <div class="entry-emo-intensity" style="color:${emo_colors[entry.emocao]}">
+            ${emo_emojis[entry.emocao]} ${emo_labels[entry.emocao]} · ${int_labels[entry.intensidade]}
+          </div>
+          ${entry.nota ? `<div class="entry-note">${entry.nota}</div>` : '<div class="entry-note" style="opacity:.5;">Sem nota</div>'}
+        </div>
+      </div>
+    `;
+  });
+  
+  document.getElementById('modal-entries').innerHTML = entriesHTML;
+  document.getElementById('day-modal').classList.add('on');
+}
+
+function closeModal() {
+  document.getElementById('day-modal').classList.remove('on');
+}
+
+document.getElementById('day-modal').addEventListener('click', e => {
+  if (e.target.id === 'day-modal') closeModal();
+});
+
+// ── TABS ──
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function goBack() {
+  window.location.href = 'index.html';
+}
+
+// Boot
+boot();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+</body>
+</html>
