@@ -38,7 +38,7 @@
   /* fields */
   .field{margin-bottom:16px}
   .field label{display:block;font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}
-  .field input,.field textarea{width:100%;padding:13px 14px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:16px;font-family:inherit;background:var(--bg);color:var(--tx);outline:none;transition:border-color .2s}
+  .field input,.field textarea{width:100%;padding:13px 14px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:16px;font-family:inherit;background:var(--bg);color:var(--tx);outline:none}
   .field input:focus,.field textarea:focus{border-color:var(--teal)}
   .field textarea{resize:none;height:82px;line-height:1.5}
   .hint{font-size:12px;color:var(--tx3);margin-top:5px}
@@ -46,9 +46,6 @@
   /* otp */
   .otp-row{display:flex;gap:clamp(4px,2vw,10px);margin-bottom:16px;justify-content:center}
   .otp-box{width:clamp(36px,12vw,48px);height:clamp(36px,12vw,48px);flex:none;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:clamp(14px,4vw,18px);font-weight:700;text-align:center;background:var(--bg);color:var(--tx);outline:none;transition:border-color .2s}
-  
-  ./*otp-row{display:flex;gap:8px;margin-bottom:16px}*/
-  /*.otp-box{flex:1;height:40px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:16px;font-weight:700;text-align:center;background:var(--bg);color:var(--tx);outline:none;transition:border-color .2s}*/
   .otp-box:focus{border-color:var(--teal)}
 
   /* buttons */
@@ -88,6 +85,7 @@
   .pi{flex:1;min-width:0}
   .pn{font-size:14px;font-weight:600}
   .pe{font-size:12px;color:var(--tx2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .prof-actions{display:flex;gap:8px}
 
   /* status screens */
   .big-ic{font-size:62px;text-align:center;margin-bottom:14px}
@@ -101,11 +99,11 @@
   .pend-ban .ps{font-size:12px;color:var(--amber);opacity:.85}
 
   /* toast */
-  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:11px 20px;border-radius:24px;font-size:13px;font-weight:500;white-space:nowrap;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:11px 20px;border-radius:24px;font-size:13px;font-weight:500;white-space:nowrap;z-index:200;opacity:0;transition:opacity .2s}
   .toast.on{opacity:1}
 
   /* spinner */
-  .spin{display:inline-block;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:8px}
+  .spin{display:inline-block;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:6px}
   @keyframes sp{to{transform:rotate(360deg)}}
 
   /* error */
@@ -195,7 +193,10 @@
       <div class="pn" id="u-nome">—</div>
       <div class="pe" id="u-email">—</div>
     </div>
-    <button class="btn btn-g btn-sm" onclick="logout()">Sair</button>
+    <div class="prof-actions">
+      <button class="btn btn-g btn-sm" onclick="goHistory()">📊</button>
+      <button class="btn btn-g btn-sm" onclick="logout()">Sair</button>
+    </div>
   </div>
 
   <div class="pend-ban" id="pend-ban" style="display:none">
@@ -244,7 +245,7 @@
 //  CONFIGURAÇÃO — preenche estes dois valores
 // ════════════════════════════════════════════
 const SUPABASE_URL      = "https://dxzdfzjrxhjwbeluwpsy.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4emRmempyeGhqd2JlbHV3cHN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTM4ODAsImV4cCI6MjA5NDgyOTg4MH0.3o7igGA5D6C8DvUnz8vGg9ZZ_NMNQK6azw1svThNUfo";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4emRmempyeGhqd2JlbHV3cHN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTM4ODAsImV4cCI6MjA5NDgyOTg4MH0.3o7YxGsYO93llRtcx2cIWmLHVvGvNS3RidqvXGPWzO8";
 // ════════════════════════════════════════════
 
 const emo_labels = {alegria:"Alegria",tristeza:"Tristeza",medo:"Ansiedade",raiva:"Frustração",calma:"Calma",misto:"Misto"};
@@ -453,6 +454,10 @@ async function logout() {
   await sb.auth.signOut();
   currentUser = null; currentProfile = null; selectedEmo = null;
   show("s-reg");
+}
+
+function goHistory() {
+  window.location.href = 'historico.html';
 }
 
 // ── helpers ──
