@@ -107,7 +107,7 @@
   .modal.on{display:flex}
   .modal-content{background:var(--bg);border-radius:var(--r) var(--r) 0 0;padding:20px;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp .3s}
   .modal-header{font-size:16px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--bd)}
-  .modal-close{position:absolute;top:16px;right:16px;width:28px;height:28px;background:var(--bg2);border:none;border-radius:var(--rs);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
+  .modal-close{position:absolute;top:16px;right:16px;width:28px;height:28px;background:var(--bg2);border:none;border-radius:var(--rs);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s}
   .entry-item{display:flex;gap:12px;padding:12px;background:var(--bg2);border-radius:var(--rs);margin-bottom:8px;border-left:3px solid var(--teal)}
   .entry-time{font-size:12px;color:var(--tx3);min-width:50px}
   .entry-details{flex:1;min-width:0}
@@ -186,7 +186,7 @@
 //  CONFIGURAÇÃO — mesmas variáveis de index.html
 // ════════════════════════════════════════════
 const SUPABASE_URL      = "https://dxzdfzjrxhjwbeluwpsy.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4emRmempyeGhqd2JlbHV3cHN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTM4ODAsImV4cCI6MjA5NDgyOTg4MH0.3o7YxGsYO93llRtcx2cIWmLHVvGvNS3RidqvXGPWzO8";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4emRmempyeGhqd2JlbHV3cHN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyNTM4ODAsImV4cCI6MjA5NDgyOTg4MH0.3o7igGA5D6C8DvUnz8vGg9ZZ_NMNQK6azw1svThNUfo";
 // ════════════════════════════════════════════
 
 const emo_labels = {alegria:"Alegria",tristeza:"Tristeza",medo:"Ansiedade",raiva:"Frustração",calma:"Calma",misto:"Misto"};
