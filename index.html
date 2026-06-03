@@ -3,9 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+ 
+<!-- PWA: identidade -->
+<meta name="application-name" content="Emoções">
+<meta name="theme-color" content="#f5f5f3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1a1a"  media="(prefers-color-scheme: dark)">
+
+<!-- PWA: iOS -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#1D9E75">
+<meta name="apple-mobile-web-app-title" content="Emoções">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+CiAgPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSI5NiIgZmlsbD0iI2ZmZmZmZiIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjY0IiAgcj0iMjgiIGZpbGw9IiM5RkUxQ0IiLz4KICA8Y2lyY2xlIGN4PSIyNTYiIGN5PSI2NCIgIHI9IjE0IiBmaWxsPSIjMUQ5RTc1Ii8+CiAgPGNpcmNsZSBjeD0iNDE2IiBjeT0iMTQ4IiByPSIyNCIgZmlsbD0iI0ZBQzc3NSIvPgogIDxjaXJjbGUgY3g9IjQxNiIgY3k9IjE0OCIgcj0iMTIiIGZpbGw9IiNCQTc1MTciLz4KICA8Y2lyY2xlIGN4PSI0NDgiIGN5PSIzMjAiIHI9IjIwIiBmaWxsPSIjRjVDNEIzIi8+CiAgPGNpcmNsZSBjeD0iNDQ4IiBjeT0iMzIwIiByPSIxMCIgZmlsbD0iI0Q4NUEzMCIvPgogIDxjaXJjbGUgY3g9IjM0MCIgY3k9IjQ0OCIgcj0iMjQiIGZpbGw9IiNGN0MxQzEiLz4KICA8Y2lyY2xlIGN4PSIzNDAiIGN5PSI0NDgiIHI9IjEyIiBmaWxsPSIjRTI0QjRBIi8+CiAgPGNpcmNsZSBjeD0iMTcyIiBjeT0iNDQ4IiByPSIyNCIgZmlsbD0iI0NFQ0JGNiIvPgogIDxjaXJjbGUgY3g9IjE3MiIgY3k9IjQ0OCIgcj0iMTIiIGZpbGw9IiM3Rjc3REQiLz4KICA8Y2lyY2xlIGN4PSI2NCIgIGN5PSIzMjAiIHI9IjIwIiBmaWxsPSIjQjVENEY0Ii8+CiAgPGNpcmNsZSBjeD0iNjQiICBjeT0iMzIwIiByPSIxMCIgZmlsbD0iIzM3OEFERCIvPgogIDxjaXJjbGUgY3g9Ijk2IiAgY3k9IjE0OCIgcj0iMjQiIGZpbGw9IiNDMEREOTciLz4KICA8Y2lyY2xlIGN4PSI5NiIgIGN5PSIxNDgiIHI9IjEyIiBmaWxsPSIjNjM5OTIyIi8+CiAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIxMTIiIGZpbGw9IiNmNWY1ZjMiIHN0cm9rZT0iI2UwZTBkZSIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGNpcmNsZSBjeD0iMjE4IiBjeT0iMjM0IiByPSIxMCIgZmlsbD0iIzIyMjIyMiIvPgogIDxjaXJjbGUgY3g9IjI5NCIgY3k9IjIzNCIgcj0iMTAiIGZpbGw9IiMyMjIyMjIiLz4KICA8cGF0aCBkPSJNMjEwIDI4NCBRMjU2IDMxNiAzMDIgMjg0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMjIyMjIiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=">
+
+<!-- Favicon browser tab -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+CiAgPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSI5NiIgZmlsbD0iI2ZmZmZmZiIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjY0IiAgcj0iMjgiIGZpbGw9IiM5RkUxQ0IiLz4KICA8Y2lyY2xlIGN4PSIyNTYiIGN5PSI2NCIgIHI9IjE0IiBmaWxsPSIjMUQ5RTc1Ii8+CiAgPGNpcmNsZSBjeD0iNDE2IiBjeT0iMTQ4IiByPSIyNCIgZmlsbD0iI0ZBQzc3NSIvPgogIDxjaXJjbGUgY3g9IjQxNiIgY3k9IjE0OCIgcj0iMTIiIGZpbGw9IiNCQTc1MTciLz4KICA8Y2lyY2xlIGN4PSI0NDgiIGN5PSIzMjAiIHI9IjIwIiBmaWxsPSIjRjVDNEIzIi8+CiAgPGNpcmNsZSBjeD0iNDQ4IiBjeT0iMzIwIiByPSIxMCIgZmlsbD0iI0Q4NUEzMCIvPgogIDxjaXJjbGUgY3g9IjM0MCIgY3k9IjQ0OCIgcj0iMjQiIGZpbGw9IiNGN0MxQzEiLz4KICA8Y2lyY2xlIGN4PSIzNDAiIGN5PSI0NDgiIHI9IjEyIiBmaWxsPSIjRTI0QjRBIi8+CiAgPGNpcmNsZSBjeD0iMTcyIiBjeT0iNDQ4IiByPSIyNCIgZmlsbD0iI0NFQ0JGNiIvPgogIDxjaXJjbGUgY3g9IjE3MiIgY3k9IjQ0OCIgcj0iMTIiIGZpbGw9IiM3Rjc3REQiLz4KICA8Y2lyY2xlIGN4PSI2NCIgIGN5PSIzMjAiIHI9IjIwIiBmaWxsPSIjQjVENEY0Ii8+CiAgPGNpcmNsZSBjeD0iNjQiICBjeT0iMzIwIiByPSIxMCIgZmlsbD0iIzM3OEFERCIvPgogIDxjaXJjbGUgY3g9Ijk2IiAgY3k9IjE0OCIgcj0iMjQiIGZpbGw9IiNDMEREOTciLz4KICA8Y2lyY2xlIGN4PSI5NiIgIGN5PSIxNDgiIHI9IjEyIiBmaWxsPSIjNjM5OTIyIi8+CiAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIxMTIiIGZpbGw9IiNmNWY1ZjMiIHN0cm9rZT0iI2UwZTBkZSIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGNpcmNsZSBjeD0iMjE4IiBjeT0iMjM0IiByPSIxMCIgZmlsbD0iIzIyMjIyMiIvPgogIDxjaXJjbGUgY3g9IjI5NCIgY3k9IjIzNCIgcj0iMTAiIGZpbGw9IiMyMjIyMjIiLz4KICA8cGF0aCBkPSJNMjEwIDI4NCBRMjU2IDMxNiAzMDIgMjg0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMjIyMjIiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=">
+
+<!-- PWA Manifest embutido -->
+<script id="pwa-manifest-inject">
+(function(){
+  const ICON   = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+CiAgPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSI5NiIgZmlsbD0iI2ZmZmZmZiIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9IjY0IiAgcj0iMjgiIGZpbGw9IiM5RkUxQ0IiLz4KICA8Y2lyY2xlIGN4PSIyNTYiIGN5PSI2NCIgIHI9IjE0IiBmaWxsPSIjMUQ5RTc1Ii8+CiAgPGNpcmNsZSBjeD0iNDE2IiBjeT0iMTQ4IiByPSIyNCIgZmlsbD0iI0ZBQzc3NSIvPgogIDxjaXJjbGUgY3g9IjQxNiIgY3k9IjE0OCIgcj0iMTIiIGZpbGw9IiNCQTc1MTciLz4KICA8Y2lyY2xlIGN4PSI0NDgiIGN5PSIzMjAiIHI9IjIwIiBmaWxsPSIjRjVDNEIzIi8+CiAgPGNpcmNsZSBjeD0iNDQ4IiBjeT0iMzIwIiByPSIxMCIgZmlsbD0iI0Q4NUEzMCIvPgogIDxjaXJjbGUgY3g9IjM0MCIgY3k9IjQ0OCIgcj0iMjQiIGZpbGw9IiNGN0MxQzEiLz4KICA8Y2lyY2xlIGN4PSIzNDAiIGN5PSI0NDgiIHI9IjEyIiBmaWxsPSIjRTI0QjRBIi8+CiAgPGNpcmNsZSBjeD0iMTcyIiBjeT0iNDQ4IiByPSIyNCIgZmlsbD0iI0NFQ0JGNiIvPgogIDxjaXJjbGUgY3g9IjE3MiIgY3k9IjQ0OCIgcj0iMTIiIGZpbGw9IiM3Rjc3REQiLz4KICA8Y2lyY2xlIGN4PSI2NCIgIGN5PSIzMjAiIHI9IjIwIiBmaWxsPSIjQjVENEY0Ii8+CiAgPGNpcmNsZSBjeD0iNjQiICBjeT0iMzIwIiByPSIxMCIgZmlsbD0iIzM3OEFERCIvPgogIDxjaXJjbGUgY3g9Ijk2IiAgY3k9IjE0OCIgcj0iMjQiIGZpbGw9IiNDMEREOTciLz4KICA8Y2lyY2xlIGN4PSI5NiIgIGN5PSIxNDgiIHI9IjEyIiBmaWxsPSIjNjM5OTIyIi8+CiAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIxMTIiIGZpbGw9IiNmNWY1ZjMiIHN0cm9rZT0iI2UwZTBkZSIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGNpcmNsZSBjeD0iMjE4IiBjeT0iMjM0IiByPSIxMCIgZmlsbD0iIzIyMjIyMiIvPgogIDxjaXJjbGUgY3g9IjI5NCIgY3k9IjIzNCIgcj0iMTAiIGZpbGw9IiMyMjIyMjIiLz4KICA8cGF0aCBkPSJNMjEwIDI4NCBRMjU2IDMxNiAzMDIgMjg0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMjIyMjIiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=";
+  const MASK   = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+CiAgPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIGZpbGw9IiNmZmZmZmYiLz4KICA8ZWxsaXBzZSBjeD0iMjU2IiBjeT0iMjU2IiByeD0iMjIwIiByeT0iMjIwIiBmaWxsPSIjRTFGNUVFIiBvcGFjaXR5PSIwLjUiLz4KICA8ZWxsaXBzZSBjeD0iMjU2IiBjeT0iMjU2IiByeD0iMTYwIiByeT0iMTYwIiBmaWxsPSIjZmZmZmZmIi8+CiAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iNzUiICByPSIxOCIgZmlsbD0iIzlGRTFDQiIvPgogIDxjaXJjbGUgY3g9IjI1NiIgY3k9Ijc1IiAgcj0iMTAiIGZpbGw9IiMxRDlFNzUiLz4KICA8Y2lyY2xlIGN4PSIzOTAiIGN5PSIxNDAiIHI9IjE2IiBmaWxsPSIjRkFDNzc1Ii8+CiAgPGNpcmNsZSBjeD0iMzkwIiBjeT0iMTQwIiByPSI5IiAgZmlsbD0iI0JBNzUxNyIvPgogIDxjaXJjbGUgY3g9IjQzNyIgY3k9IjI5MCIgcj0iMTQiIGZpbGw9IiNGNUM0QjMiLz4KICA8Y2lyY2xlIGN4PSI0MzciIGN5PSIyOTAiIHI9IjgiICBmaWxsPSIjRDg1QTMwIi8+CiAgPGNpcmNsZSBjeD0iMzUwIiBjeT0iNDIwIiByPSIxNiIgZmlsbD0iI0Y3QzFDMSIvPgogIDxjaXJjbGUgY3g9IjM1MCIgY3k9IjQyMCIgcj0iOSIgIGZpbGw9IiNFMjRCNEEiLz4KICA8Y2lyY2xlIGN4PSIxNjIiIGN5PSI0MjAiIHI9IjE2IiBmaWxsPSIjQ0VDQkY2Ii8+CiAgPGNpcmNsZSBjeD0iMTYyIiBjeT0iNDIwIiByPSI5IiAgZmlsbD0iIzdGNzdERCIvPgogIDxjaXJjbGUgY3g9Ijc1IiAgY3k9IjI5MCIgcj0iMTQiIGZpbGw9IiNCNUQ0RjQiLz4KICA8Y2lyY2xlIGN4PSI3NSIgIGN5PSIyOTAiIHI9IjgiICBmaWxsPSIjMzc4QUREIi8+CiAgPGNpcmNsZSBjeD0iMTIyIiBjeT0iMTQwIiByPSIxNiIgZmlsbD0iI0MwREQ5NyIvPgogIDxjaXJjbGUgY3g9IjEyMiIgY3k9IjE0MCIgcj0iOSIgIGZpbGw9IiM2Mzk5MjIiLz4KICA8Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjExMCIgZmlsbD0iI2Y1ZjVmMyIgc3Ryb2tlPSIjZTBlMGRlIiBzdHJva2Utd2lkdGg9IjEuNSIvPgogIDxjaXJjbGUgY3g9IjIyMCIgY3k9IjIzNiIgcj0iMTAiICBmaWxsPSIjMjIyMjIyIi8+CiAgPGNpcmNsZSBjeD0iMjkyIiBjeT0iMjM2IiByPSIxMCIgIGZpbGw9IiMyMjIyMjIiLz4KICA8cGF0aCBkPSJNMjEyIDI4MiBRMjU2IDMxMiAzMDAgMjgyIiBmaWxsPSJub25lIiBzdHJva2U9IiMyMjIyMjIiIHN0cm9rZS13aWR0aD0iNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=";
+  const manifest = {
+    name: "Gestão de Emoções",
+    short_name: "Emoções",
+    description: "Regista e acompanha as tuas emoções ao longo do dia",
+    start_url: ".",
+    display: "standalone",
+    orientation: "portrait",
+    theme_color: "#f5f5f3",
+    background_color: "#ffffff",
+    icons: [
+      { src: ICON, sizes: "512x512", type: "image/svg+xml", purpose: "any" },
+      { src: MASK, sizes: "512x512", type: "image/svg+xml", purpose: "maskable" }
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], {type:"application/manifest+json"});
+  const url  = URL.createObjectURL(blob);
+  const link = document.createElement("link");
+  link.rel   = "manifest";
+  link.href  = url;
+  document.head.appendChild(link);
+})();
+</script>
+
 <title>Como estás?</title>
 <style>
   :root {
@@ -483,6 +523,35 @@ function toast(msg) {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"
   onload="boot()" onerror="document.getElementById('s-noconfig').querySelector('.big-s').textContent='Erro ao carregar Supabase. Verifica a tua ligação à internet.'">
+</script>
+
+<!-- PWA: Service Worker embutido -->
+<script>
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE = 'emocoes-v1';
+    self.addEventListener('install', e => {
+      self.skipWaiting();
+    });
+    self.addEventListener('activate', e => {
+      e.waitUntil(clients.claim());
+    });
+    self.addEventListener('fetch', e => {
+      // Deixa passar pedidos ao Supabase sem interferir
+      if (e.request.url.includes('supabase.co') || e.request.url.includes('jsdelivr')) {
+        e.respondWith(fetch(e.request));
+        return;
+      }
+      e.respondWith(
+        caches.match(e.request).then(cached => cached || fetch(e.request))
+      );
+    });
+  `;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl, { scope: './' })
+    .catch(() => {}); // falha silenciosa se não tiver HTTPS
+}
 </script>
 
 </body>
